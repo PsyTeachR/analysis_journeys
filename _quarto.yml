@@ -47,10 +47,10 @@ book:
   - index.qmd
   - part: "Wrangling"
     chapters:
-      - Bartlett-analysis-journey-wrangle.qmd
+      - Bartlett-wrangle.qmd
   - part: "Analysis"
     chapters:
-      - Evans-analysis-journey-analysis.qmd
+      - Evans-analysis.qmd
   appendices:
   - references.qmd
 bibliography: include/book.bib
