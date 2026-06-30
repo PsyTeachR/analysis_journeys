@@ -22,7 +22,7 @@ For this task, we are using open data from @pennington_awareness_2026. The abstr
 
 > **Background:** Growing concerns about replicability, reproducibility, and transparency have led to the adoption of several open research practices aimed at reforming the academic ecosystem. The current study explores international researcher’s awareness and use of open research practice and variations across regions, disciplines, methodologies, and career level. **Methods:** A total of 3,017 researchers (45 countries; 24 disciplines) completed the Brief Open Research Survey, reporting their awareness and use of eleven common open research practices and factors that would support their adoption. **Results:** Respondents reported high awareness of Open Access Publishing, Preprints, and Open Data and awareness only fell below 50% for Research Co-production and Registered Reports. Use was high for Open Access Publishing, but fell below 50% for Preprints, Open Data, Open Research [term], Open Materials, Open Peer Review, Open Code, Preregistration, Research Co-production, Replication, and Registered Reports. Awareness and use varied across the sampled regions (e.g., Europe vs. Asia), disciplines (e.g., Psychology vs. General & Others in Sciences), methodologies (e.g., quantitative vs. qualitative), and career stages (e.g., PhD students vs. Professors). Respondents reported that the top five supportive strategies of open research were incentives from funders, institutions and regulators; dedicated funding; recognition in promotion and recruitment criteria; more training; and more information. **Conclusions:** Awareness is uniformly higher than use across open research practices and there are important variations between regions, methodologies, and career stages, as well as discipline-specific practices.
 
-To summarise, they were interested in measuring the awareness and usage gap in common open science practices. Pennington et al. presented 3017 researchers with these practices and recorded several demographic variables. To avoid triangulation, the researchers separated the data into several files. For this chapter, we will summarise and visualise the data to look for patterns across countries and research disciplines. 
+To summarise, they were interested in measuring the awareness and usage gap in common open science practices. Pennington et al. presented 3017 researchers with these practices and recorded several demographic variables. To avoid triangulation, the researchers separated the data into several files. We can describe their research question as: "What is the prevalence of awareness and use of common open research practices across international regions and disciplines?".For this chapter, we will summarise and visualise the data to look for patterns across countries and research disciplines. 
 
 ### Organising your files and project for the task
 
@@ -98,13 +98,63 @@ In `discipline`, we then have 11 items for awareness of open research practices,
 ::: {.callout-tip}
 #### Try this
 Now we have introduced the two data sets, explore them using different methods we introduced. For example, opening the data objects as a tab to scroll around, explore with `glimpse()`, or even try plotting some of the variables to see what they look like. 
+
+Remember, their research question was: "What is the prevalence of awareness and use of common open research practices across international regions and disciplines?". After reading the code book and exploring the initial data, what steps do you think you will need to take to wrangle the data to be able to answer these questions? 
 :::
 
 ## Wrangling `country`
 
-## Wrangling `discipline`
+Before we start wrangling the awareness and usage data, we can check some details of the countries. For example, how many countries are included in the data, what are the most and least frequent countries? Fortunately, the survey used drop-down boxes, so we do not have to worry about nasty free-text shenanigans. 
+
+Remember: you might not use the exact same code as our solutions, it is getting the correct answer which is important. Sometimes our code will be more efficient and you can learn some new tricks, other times you might have a more elegant solution than us. 
+
+1. How many countries are included in the data (use `country_analysis` to get the full list)? There were `r fitb(45)` unique countries, excluding NA responses.
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+```{r}
+country %>% 
+  drop_na(country_analysis) %>% 
+  distinct(country_analysis) %>% 
+  nrow()
+```
+:::
+
+2. What was the most frequent response country (use `country_analysis` to get the full list)? The most frequent response country was `r mcq(sample(c(answer = "Italy", "Austria", "United Kingdom", "Croatia")))`.
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+```{r}
+country %>% 
+  count(country_analysis) %>% 
+  arrange(desc(n))
+```
+:::
+
+3. How many countries only had one respondent (using `country_analysis`)? There were `r fitb(15)` countries with only one respondent. 
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+```{r}
+country %>% 
+  drop_na(country_analysis) %>% 
+  count(country_analysis) %>% 
+  arrange(n) %>% 
+  filter(n == 1) %>% 
+  nrow()
+```
+:::
+
+### Wrangling awareness and usage
+
+Now that we have had a little explore of the country variables, it is time to wrangle the awareness and usage data into something we can get insights from. 
 
 ## Summarising/visualising `country`
+
+## Wrangling `discipline`
 
 ## Summarising/visualising `discipline`
 
