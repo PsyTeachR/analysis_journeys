@@ -1,0 +1,114 @@
+# Pennington et al. (2026): Awareness and Use of Open Research Practices {#journey-02-wrangling}
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+# Load the tidyverse package below
+library(tidyverse)
+
+# Load the data files
+# This should be the Pennington_country.csv file 
+country <- read_csv("data/Pennington_country.csv")
+
+# This should be the Pennington_discipline.csv file 
+discipline <- read_csv("data/Pennington_discipline.csv")
+```
+
+In this chapter, we assume you have covered data wrangling tasks such as selecting variables, joining datasets, creating and modifying variables, and calculating summary statistics. There are then some basic visualisation opportunities to create things like bar plots.  
+
+## Task preparation
+
+### Introduction to the data set 
+
+For this task, we are using open data from @pennington_awareness_2026. The abstract of their article is:
+
+> **Background:** Growing concerns about replicability, reproducibility, and transparency have led to the adoption of several open research practices aimed at reforming the academic ecosystem. The current study explores international researcher’s awareness and use of open research practice and variations across regions, disciplines, methodologies, and career level. **Methods:** A total of 3,017 researchers (45 countries; 24 disciplines) completed the Brief Open Research Survey, reporting their awareness and use of eleven common open research practices and factors that would support their adoption. **Results:** Respondents reported high awareness of Open Access Publishing, Preprints, and Open Data and awareness only fell below 50% for Research Co-production and Registered Reports. Use was high for Open Access Publishing, but fell below 50% for Preprints, Open Data, Open Research [term], Open Materials, Open Peer Review, Open Code, Preregistration, Research Co-production, Replication, and Registered Reports. Awareness and use varied across the sampled regions (e.g., Europe vs. Asia), disciplines (e.g., Psychology vs. General & Others in Sciences), methodologies (e.g., quantitative vs. qualitative), and career stages (e.g., PhD students vs. Professors). Respondents reported that the top five supportive strategies of open research were incentives from funders, institutions and regulators; dedicated funding; recognition in promotion and recruitment criteria; more training; and more information. **Conclusions:** Awareness is uniformly higher than use across open research practices and there are important variations between regions, methodologies, and career stages, as well as discipline-specific practices.
+
+To summarise, they were interested in measuring the awareness and usage gap in common open science practices. Pennington et al. presented 3017 researchers with these practices and recorded several demographic variables. To avoid triangulation, the researchers separated the data into several files. For this chapter, we will summarise and visualise the data to look for patterns across countries and research disciplines. 
+
+### Organising your files and project for the task
+
+Before we can get started, you need to organise your files and project for the task, so your working directory is in order.
+
+1. You can create a folder for the data analysis journeys book and a new sub-folder for this chapter, something like: `analysis_journeys`, create a new folder for this chapter called something like `Pennington_wrangling`. Within `Pennington_wrangling`, create two new folders called `data` and `figures`.
+
+2. Create an R Project for `Pennington_wrangling` as an existing directory for your chapter folder. This should now be your working directory.
+
+3. Create a new Quarto document and give it a sensible title describing the chapter, such as `Pennington et al. (2026): Data Wrangling`. Delete everything below line 10 so you have a blank file to work with and save the file in your `Pennington_wrangling` folder. 
+
+4. We are working with data separated into two files. The links are the country data file ([Pennington_country.csv](data/Pennington_country.csv)) and the discipline data file ([Pennington_discipline.csv](data/Pennington_discipline.csv)). Right click the links and select "save link as", or clicking the links will save the files to your Downloads. Make sure that both files are saved as ".csv". Save or copy the file to your `data/` folder within `Pennington_wrangling`.
+
+You are now ready to start working on the task! 
+
+## Overview
+
+### Load <pkg>tidyverse</pkg> and read the data files
+
+Before we explore what wrangling we need to do, load <pkg>tidyverse</pkg> and read the two data files. As a prompt, save the data files to these object names to be consistent with the activities below, but you can check the solution if you are stuck. 
+
+```{r eval=FALSE}
+# Load the tidyverse package below
+library(tidyverse)
+
+# Load the data files
+# This should be the Pennington_country.csv file 
+country <- ?
+
+# This should be the Pennington_discipline.csv file 
+discipline <- ?
+```
+
+::: {.callout-tip collapse="true"}
+#### Show me the solution
+You should have the following in a code chunk: 
+
+```{r eval=FALSE}
+# Load the tidyverse package below
+library(tidyverse)
+
+# Load the data files
+# This should be the Pennington_country.csv file 
+country <- read_csv("data/Pennington_country.csv")
+
+# This should be the Pennington_discipline.csv file 
+discipline <- read_csv("data/Pennington_discipline.csv")
+```
+:::
+
+### Explore `country` and `discipline`
+
+The data from @pennington_awareness_2026 is split into two data files. In `country`, we have the participant ID (`ID`) , data quality items, which country the researcher came from, 11 items for awareness of open research practices, and 11 items for usage of open research practices. The columns (variables) we have in the data set are:
+
+| Variable       |       Type                       |           Description          |
+|:--------------:|:---------------------------------|:-------------------------------|
+| `id` | `r typeof(country$id)`| Participant ID number. |
+| `finished` | `r typeof(country$finished)`| Whether the participant finished the study; TRUE = yes, FALSE = no. |
+| `consent` | `r typeof(country$consent)`| Whether the participant consented; Yes or No. |
+| `country` | `r typeof(country$country)`| The country of origin for the participant from drop-downs. |
+| `country_analysis` | `r typeof(country$country_analysis)`| The country of origin for the participants, combining free-text option. |
+| `aware_open_research` to `aware_research_co_production` | `r typeof(country$aware_research_co_production)`|  11 items for awareness, with responses of "I'm aware of this" or NA. |
+| `used_open_research` to `used_research_co_production` | `r typeof(country$used_research_co_production)`| 11 items for usage, with responses of "I've used this", "I've not used this", "Not applicable to my research", or NA. |
+
+In `discipline`, we then have 11 items for awareness of open research practices, 11 items for usage of open research practices, and their research discipline. The columns (variables) we have in the data set are:
+
+| Variable       |       Type                       |           Description          |
+|:--------------:|:---------------------------------|:-------------------------------|
+| `aware_open_research` to `aware_research_co_production` | `r typeof(country$aware_research_co_production)`|  11 items for awareness, with responses of "I'm aware of this" or NA. |
+| `used_open_research` to `used_research_co_production` | `r typeof(country$used_research_co_production)`| 11 items for usage, with responses of "I've used this", "I've not used this", "Not applicable to my research", or NA. |
+| `discipline` | `r typeof(discipline$discipline)`| Research discipline of the participant, including psychology, physical sciences, and social sciences. |
+
+::: {.callout-tip}
+#### Try this
+Now we have introduced the two data sets, explore them using different methods we introduced. For example, opening the data objects as a tab to scroll around, explore with `glimpse()`, or even try plotting some of the variables to see what they look like. 
+:::
+
+## Wrangling `country`
+
+## Wrangling `discipline`
+
+## Summarising/visualising `country`
+
+## Summarising/visualising `discipline`
+
+## Conclusion
+
+Well done! Hopefully you recognised how far your skills have come to be able to do this independently, regardless of how many hints you needed. 
+
