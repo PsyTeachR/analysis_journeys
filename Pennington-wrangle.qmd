@@ -8,8 +8,6 @@ library(tidyverse)
 # This should be the Pennington_country.csv file 
 country <- read_csv("data/Pennington_country.csv")
 
-# This should be the Pennington_discipline.csv file 
-discipline <- read_csv("data/Pennington_discipline.csv")
 ```
 
 In this chapter, we assume you have covered data wrangling tasks such as selecting variables, joining datasets, creating and modifying variables, and calculating summary statistics. There are then some basic visualisation opportunities to create things like bar plots.  
@@ -22,7 +20,7 @@ For this task, we are using open data from @pennington_awareness_2026. The abstr
 
 > **Background:** Growing concerns about replicability, reproducibility, and transparency have led to the adoption of several open research practices aimed at reforming the academic ecosystem. The current study explores international researcher’s awareness and use of open research practice and variations across regions, disciplines, methodologies, and career level. **Methods:** A total of 3,017 researchers (45 countries; 24 disciplines) completed the Brief Open Research Survey, reporting their awareness and use of eleven common open research practices and factors that would support their adoption. **Results:** Respondents reported high awareness of Open Access Publishing, Preprints, and Open Data and awareness only fell below 50% for Research Co-production and Registered Reports. Use was high for Open Access Publishing, but fell below 50% for Preprints, Open Data, Open Research [term], Open Materials, Open Peer Review, Open Code, Preregistration, Research Co-production, Replication, and Registered Reports. Awareness and use varied across the sampled regions (e.g., Europe vs. Asia), disciplines (e.g., Psychology vs. General & Others in Sciences), methodologies (e.g., quantitative vs. qualitative), and career stages (e.g., PhD students vs. Professors). Respondents reported that the top five supportive strategies of open research were incentives from funders, institutions and regulators; dedicated funding; recognition in promotion and recruitment criteria; more training; and more information. **Conclusions:** Awareness is uniformly higher than use across open research practices and there are important variations between regions, methodologies, and career stages, as well as discipline-specific practices.
 
-To summarise, they were interested in measuring the awareness and usage gap in common open science practices. Pennington et al. presented 3017 researchers with these practices and recorded several demographic variables. To avoid triangulation, the researchers separated the data into several files. We can describe their research question as: "What is the prevalence of awareness and use of common open research practices across international regions and disciplines?".For this chapter, we will summarise and visualise the data to look for patterns across countries and research disciplines. 
+To summarise, they were interested in measuring the awareness and usage gap in common open science practices. Pennington et al. presented 3017 researchers with these practices and recorded several demographic variables. To avoid triangulation, the researchers separated the data into several files. We can describe their research question as: "What is the prevalence of awareness and use of common open research practices across international regions?". For this chapter, we will summarise and visualise the data to look for patterns across the whole sample and across countries. 
 
 ### Organising your files and project for the task
 
@@ -34,26 +32,23 @@ Before we can get started, you need to organise your files and project for the t
 
 3. Create a new Quarto document and give it a sensible title describing the chapter, such as `Pennington et al. (2026): Data Wrangling`. Delete everything below line 10 so you have a blank file to work with and save the file in your `Pennington_wrangling` folder. 
 
-4. We are working with data separated into two files. The links are the country data file ([Pennington_country.csv](data/Pennington_country.csv)) and the discipline data file ([Pennington_discipline.csv](data/Pennington_discipline.csv)). Right click the links and select "save link as", or clicking the links will save the files to your Downloads. Make sure that both files are saved as ".csv". Save or copy the file to your `data/` folder within `Pennington_wrangling`.
+4. You can download the country data file ([Pennington_country.csv](data/Pennington_country.csv)) here. Right click the link and select "save link as", or clicking the link will save the file to your Downloads. Make sure that you save the file as ".csv". Save or copy the file to your `data/` folder within `Pennington_wrangling`.
 
 You are now ready to start working on the task! 
 
 ## Overview
 
-### Load <pkg>tidyverse</pkg> and read the data files
+### Load <pkg>tidyverse</pkg> and read the data file
 
-Before we explore what wrangling we need to do, load <pkg>tidyverse</pkg> and read the two data files. As a prompt, save the data files to these object names to be consistent with the activities below, but you can check the solution if you are stuck. 
+Before we explore what wrangling we need to do, load <pkg>tidyverse</pkg> and read the country data file. As a prompt, save the data file to this object name to be consistent with the activities below, but you can check the solution if you are stuck. 
 
 ```{r eval=FALSE}
 # Load the tidyverse package below
 library(tidyverse)
 
-# Load the data files
+# Load the data file
 # This should be the Pennington_country.csv file 
 country <- ?
-
-# This should be the Pennington_discipline.csv file 
-discipline <- ?
 ```
 
 ::: {.callout-tip collapse="true"}
@@ -64,18 +59,16 @@ You should have the following in a code chunk:
 # Load the tidyverse package below
 library(tidyverse)
 
-# Load the data files
+# Load the data file
 # This should be the Pennington_country.csv file 
 country <- read_csv("data/Pennington_country.csv")
 
-# This should be the Pennington_discipline.csv file 
-discipline <- read_csv("data/Pennington_discipline.csv")
 ```
 :::
 
-### Explore `country` and `discipline`
+### Explore `country`
 
-The data from @pennington_awareness_2026 is split into two data files. In `country`, we have the participant ID (`ID`) , data quality items, which country the researcher came from, 11 items for awareness of open research practices, and 11 items for usage of open research practices. The columns (variables) we have in the data set are:
+In `country`, we have the participant ID (`ID`) , data quality items, which country the researcher came from, 11 items for awareness of open research practices, and 11 items for usage of open research practices. The columns (variables) we have in the data set are:
 
 | Variable       |       Type                       |           Description          |
 |:--------------:|:---------------------------------|:-------------------------------|
@@ -87,22 +80,14 @@ The data from @pennington_awareness_2026 is split into two data files. In `count
 | `aware_open_research` to `aware_research_co_production` | `r typeof(country$aware_research_co_production)`|  11 items for awareness, with responses of "I'm aware of this" or NA. |
 | `used_open_research` to `used_research_co_production` | `r typeof(country$used_research_co_production)`| 11 items for usage, with responses of "I've used this", "I've not used this", "Not applicable to my research", or NA. |
 
-In `discipline`, we then have 11 items for awareness of open research practices, 11 items for usage of open research practices, and their research discipline. The columns (variables) we have in the data set are:
-
-| Variable       |       Type                       |           Description          |
-|:--------------:|:---------------------------------|:-------------------------------|
-| `aware_open_research` to `aware_research_co_production` | `r typeof(country$aware_research_co_production)`|  11 items for awareness, with responses of "I'm aware of this" or NA. |
-| `used_open_research` to `used_research_co_production` | `r typeof(country$used_research_co_production)`| 11 items for usage, with responses of "I've used this", "I've not used this", "Not applicable to my research", or NA. |
-| `discipline` | `r typeof(discipline$discipline)`| Research discipline of the participant, including psychology, physical sciences, and social sciences. |
-
 ::: {.callout-tip}
 #### Try this
-Now we have introduced the two data sets, explore them using different methods we introduced. For example, opening the data objects as a tab to scroll around, explore with `glimpse()`, or even try plotting some of the variables to see what they look like. 
+Now we have introduced the data set, explore it using different methods we introduced. For example, opening the data object as a tab to scroll around, explore with `glimpse()`, or even try plotting some of the variables to see what they look like. 
 
-Remember, their research question was: "What is the prevalence of awareness and use of common open research practices across international regions and disciplines?". After reading the code book and exploring the initial data, what steps do you think you will need to take to wrangle the data to be able to answer these questions? 
+Remember, their research question was: "What is the prevalence of awareness and use of common open research practices across international regions?". After reading the code book and exploring the initial data, what steps do you think you will need to take to wrangle the data to be able to answer this question? 
 :::
 
-## Wrangling `country`
+## Wrangling the data
 
 Before we start wrangling the awareness and usage data, we can check some details of the countries. For example, how many countries are included in the data, what are the most and least frequent countries? Fortunately, the survey used drop-down boxes, so we do not have to worry about nasty free-text shenanigans. 
 
@@ -142,7 +127,6 @@ country %>%
 country %>% 
   drop_na(country_analysis) %>% 
   count(country_analysis) %>% 
-  arrange(n) %>% 
   filter(n == 1) %>% 
   nrow()
 ```
@@ -150,15 +134,254 @@ country %>%
 
 ### Wrangling awareness and usage
 
-Now that we have had a little explore of the country variables, it is time to wrangle the awareness and usage data into something we can get insights from. 
+Now that we have had a little explore of the country variables, it is time to wrangle the awareness and usage data into something we can get insights from. As a reminder, the research question was "What is the prevalence of awareness and use of common open research practices across **international regions** and disciplines?". We need to wrangle the data to be able to address the international regions element of the research question, so ask yourself how we can work with the variables to estimate the prevalence of awareness and usage by country. If you look at the original paper by Pennington et al., they code the data into four categories: used, not used: aware, not used: unaware, and not applicable. So, this will be our first challenge.
 
-## Summarising/visualising `country`
+We are going to show you a preview of the starting data set and the end product we are aiming for.
 
-## Wrangling `discipline`
+::: {.panel-tabset}
+#### Raw data
 
-## Summarising/visualising `discipline`
+```{r echo=FALSE}
+glimpse(country)
+```
 
-## Conclusion
+#### Wrangled data
 
-Well done! Hopefully you recognised how far your skills have come to be able to do this independently, regardless of how many hints you needed. 
+```{r echo=FALSE}
+usage_practices <- country %>%   
+  pivot_longer(cols = aware_open_research:used_research_co_production, 
+               names_to = "practice",
+               values_to = "response") %>% 
+  mutate(usage = case_when(grepl("aware_", practice) ~ "awareness",
+                           grepl("used_", practice) ~ "usage"),
+         practice = sub("aware_", "", practice),
+         practice = sub("used_", "", practice)) %>% 
+  pivot_wider(id_cols = id:practice, 
+              names_from = usage, 
+              values_from = response) %>% 
+  mutate(experience = case_when(awareness == "I'm aware of this" & usage == "I've used this" ~ "Used",
+                                awareness == "I'm aware of this" & usage == "I've not used this" ~ "Not used: Aware",
+                                is.na(awareness) ~ "Not used: Unaware",
+                                usage == "Not applicable to my research" ~ "N/A to my research"))
 
+glimpse(usage_practices)
+```
+:::
+
+::: {.callout-tip}
+#### Try this
+
+Before we give you a task list, try and switch between the raw data and the wrangled data. Make a list of all the differences you can see between the two data objects. 
+
+1. What type is each variable? Has it changed from the raw data? 
+
+2. Do we have any new variables? How could you create these from the variables available to you? 
+
+For the variable `experience`, this has four options which you cannot see in the preview: "Used", "Not used: Aware", "Not used: Unaware", and "N/A to my research". Which variable(s) could this be based on? 
+
+3. Do any variables look like they have been restructured? Do you need to pivot anything longer or wider? 
+
+Try and wrangle the data based on all the differences you notice to create a new object `usage_practices`. 
+
+When you get as far as you can, check the task list which explains all the steps we applied, but not how to do them. Then, you can check the solution for our code. When we start the summarising stage, we will need some additional smaller wrangling steps, but this will represent the bulk of the work. 
+
+```{r eval=FALSE}
+usage_practices <- ?
+```
+
+:::
+
+#### Task list
+
+::: {.callout-note collapse="true"} 
+#### Show me the task list
+
+These are all the steps we applied to create the wrangled data object `usage_practices`:
+
+1. Create a new object called `usage_practices` from the original object `country`. You can either create multiple objects as you go or create one long pipe chain from this point. 
+
+2. Pivot longer to turn the data into long-form. Select all the awareness and usage columns from `aware_open_research` to `used_research_co_production`. Label the names as "practice" for open science practices and label the values as "response" for their response. 
+
+3. Currently, `practice` includes the different practices twice: once for awareness and once for usage. We need a couple of steps to turn this into data that is easier to work with. Mutate to add a new column called "usage" which labels each row in `practice` as "awareness" and "usage". 
+
+Hint: The `grepl()` function can look for text patterns to create a logical variable. 
+
+4. Mutate to overwrite the `practice` variable. Now that we have created our new `usage` variable, we want to remove the "aware_" and "used_" prefixes. For each row in `practice`, we only want the practice itself, such as "open_research". 
+
+Hint: The `sub()` function can substitute text if you give it a pattern to look for and what you want to replace it with (.e.g., nothing). 
+
+5. Now that we have tidied up `practice` and created our `usage` variable, we need some restructuring. Pivot the data wider to keep all the columns from `id` to `practice`, but move the `usage` variable to new column names and use the `response` variable for values. 
+
+6. Now that there are two columns for `awareness` and `usage`, we want to mutate and add a new variable called `experience`, coding for one of four responses: 
+
+    - Used
+    
+    - Not used: Aware
+    
+    - Not used: Unaware
+    
+    - "N/A to my research. 
+    
+Hint: Use something like `case_when()` to create a variable based on combinations of `awareness` and `usage`.
+
+For some advice, think of everything you have covered so far in your course book. How could you complete these steps as efficiently as possible? Could you string together functions using pipes, or do you need some intermediary objects? If it's easier for you to complete steps with longer but accurate code, there is nothing wrong with that. You recognise ways to make your code more efficient over time. 
+:::
+
+#### Solution
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+This is the code we used to create the new object `usage_practices` using the original object `country`. As long as you get the same end result, the exact code is not important. In coding, there are multiple ways of getting to the same end result. Maybe you found a more efficient way to complete some of the steps compared to us. Maybe your code was a little longer. As long as it worked, that is the most important thing.
+
+```{r eval=FALSE}
+# create an overall object called usage_practices
+usage_practices <- country %>%   
+  # pivot longer using all the awareness and usage variables
+  pivot_longer(cols = aware_open_research:used_research_co_production, 
+               names_to = "practice",
+               values_to = "response") %>% 
+  # add a new column usage for whether the practice is awareness or usage
+  mutate(usage = case_when(grepl("aware_", practice) ~ "awareness",
+                           grepl("used_", practice) ~ "usage"),
+         # edit the practice variable to remove the aware_ and used_ prefixes
+         practice = sub("aware_", "", practice),
+         practice = sub("used_", "", practice)) %>% 
+  # pivot wider usage and response, ignoring all the other variables
+  pivot_wider(id_cols = id:practice, 
+              names_from = usage, 
+              values_from = response) %>% 
+  # create an experience variable for the four combinations of interest
+  mutate(experience = case_when(awareness == "I'm aware of this" & usage == "I've used this" ~ "Used",
+                                awareness == "I'm aware of this" & usage == "I've not used this" ~ "Not used: Aware",
+                                is.na(awareness) ~ "Not used: Unaware",
+                                usage == "Not applicable to my research" ~ "N/A to my research"))
+```
+:::
+
+## Summarising and visualising the data
+
+Now that we have wrangled the data mostly into shape, we can start to ask some questions. If you look at the original paper by Pennington et al., they first look at patterns across the whole sample, and then by region. So, for each element, we will need a couple of smaller wrangling steps. 
+
+### Total sample 
+
+Before we start asking questions of the total sample, we need a small wrangling step to generate percentages per practice and experience. Create a new object called `count_sample` using the `usage_practices` object. Count the frequencies of the combination of `practice` and `experience` variables, then calculate the percentage of respondents out of the total sample size, rounding to floor (`floor()`) to avoid rounding errors. Check your code against the solution when you have attempted it yourself first. 
+
+```{r eval=FALSE}
+count_sample <-?
+```
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+```{r}
+count_sample <- usage_practices %>% 
+  count(practice, experience) %>% 
+  mutate(percentage = floor((n / nrow(country)*100)))
+```
+:::
+
+4. Imagine you wanted to help other early career researchers develop their open research skills. However, you can only run so many sessions and you need to identify the biggest priority. Out of all the open research practices, which one had the highest response rate for "Not used: unaware"? The highest unawareness category was for: `r mcq(sample(c(answer = "Registered reports", "Preprints", "Open code", "Replication")))`.
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+```{r}
+count_sample %>% 
+  filter(experience == "Not used: Unaware") %>% 
+  arrange(desc(percentage))
+```
+:::
+
+5. As part of a group presentation, you need to visualise the open research practices to show the usage rates. Recreate the following bar plot to show the percentage of respondents who have used a given open science practice (we will ignore tidying up the practice labels for now). 
+Hint: If you have not learnt how to flip axes, check out the `coord_flip()` function.
+
+```{r echo=FALSE}
+count_sample %>% 
+  filter(experience == "Used") %>% 
+  ggplot(aes(x = practice, y = percentage)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip() + 
+  theme_classic() + 
+  scale_x_discrete(name = "Open Science Practice") + 
+  scale_y_continuous(name = "Usage frequency (%)", 
+                     breaks = seq(0, 100, 20), 
+                     limits = c(0, 100))
+```
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+```{r}
+count_sample %>% 
+  filter(experience == "Used") %>% 
+  ggplot(aes(x = practice, y = percentage)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip() + 
+  theme_classic() + 
+  scale_x_discrete(name = "Open Science Practice") + 
+  scale_y_continuous(name = "Usage frequency (%)", 
+                     breaks = seq(0, 100, 20), 
+                     limits = c(0, 100))
+```
+:::
+
+6. Summary question again...
+
+7. As a bonus task to this section, we can try and recreate their Figure 4 as close as we can without editing minor details. There might be some techniques in here which are unfamiliar to you, so do your best to find solutions yourself before you check the code. We have a stacked bar plot ordered by the open science practice being most frequent in the "Used" category from the top. 
+
+```{r echo=FALSE}
+order_practices <- count_sample %>% 
+  filter(experience == "Used") %>% 
+  arrange(percentage)
+
+count_sample %>% 
+  mutate(experience = factor(experience, 
+                             levels = c("N/A to my research", "Not used: Unaware", "Not used: Aware", "Used")),
+         practice = factor(practice, 
+                           levels = order_practices$practice)) %>% 
+  ggplot(aes(x = practice, y = percentage, fill = experience)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip() + 
+  theme_classic() + 
+  scale_x_discrete(name = "Open Science Practice") + 
+  scale_y_continuous(name = "Usage frequency (%)", 
+                     breaks = seq(0, 100, 20), 
+                     limits = c(0, 100)) +
+  scale_fill_viridis_d(name = "Experience")
+  
+```
+
+::: {.callout-caution collapse="true"} 
+#### Show me the solution
+
+```{r}
+order_practices <- count_sample %>% 
+  filter(experience == "Used") %>% 
+  arrange(percentage)
+
+count_sample %>% 
+  mutate(experience = factor(experience, 
+                             levels = c("N/A to my research", "Not used: Unaware", "Not used: Aware", "Used")),
+         practice = factor(practice, levels = order_practices$practice)) %>% 
+  ggplot(aes(x = practice, y = percentage, fill = experience)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip() + 
+  theme_classic() + 
+  scale_x_discrete(name = "Open Science Practice") + 
+  scale_y_continuous(name = "Usage frequency (%)", 
+                     breaks = seq(0, 100, 20), 
+                     limits = c(0, 100)) +
+  scale_fill_viridis_d(name = "Experience")
+```
+:::
+
+### Regions 
+
+```{r}
+# count the number of respondents per country
+# we need this for percentages later
+country_responses <- country %>% 
+  count(country) %>% 
+  rename(total_N = n)
+```
